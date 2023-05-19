@@ -1,12 +1,5 @@
----
-title: Demo
-emoji: 🐨
-colorFrom: green
-colorTo: blue
-sdk: gradio
-sdk_version: 3.29.0
-app_file: app.py
-pinned: false
----
+# TODO
 
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+- HF hub cache (model weights)
+- github action
+- dagger cloud

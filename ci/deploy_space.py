@@ -2,7 +2,11 @@
 
 import os
 import sys
+import time
 import dagger
+
+from lint import lint
+from test import test
 
 
 def deploy(hf_token: str, hf_space_id: str):
@@ -14,6 +18,7 @@ def deploy(hf_token: str, hf_space_id: str):
         deployer = (client.container().from_("samalba/huggingface-space-deploy")
             .with_directory("/src", src)
             .with_secret_variable("HF_TOKEN", secret_token)
+            .with_env_variable("CACHE_BUSTER", str(time.time()))
             .with_exec([
                 "--repo-id", hf_space_id,
                 "--access-token", hf_token,
@@ -27,4 +32,13 @@ def deploy(hf_token: str, hf_space_id: str):
 
 
 if __name__ == "__main__":
+    if "HF_TOKEN" not in os.environ:
+        print("missing HF_TOKEN in environment")
+        sys.exit(1)
+
+    # Run the lint pipeline
+    lint()
+    # Run the tests
+    test()
+    # Deploy the app to HF
     deploy(os.environ.get("HF_TOKEN"), "samalba/demo")
