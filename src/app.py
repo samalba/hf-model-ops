@@ -4,6 +4,7 @@ import gradio
 
 model = pipeline(
     "summarization",
+    model="sshleifer/distilbart-cnn-12-6",
 )
 
 def predict(prompt):
@@ -11,5 +12,5 @@ def predict(prompt):
     return summary
 
 if __name__ == '__main__':
-    with gradio.Interface(predict, "textbox", "text") as interface:
+    with gradio.Interface(predict, "textbox", "text", allow_flagging="never") as interface:
         interface.launch()
