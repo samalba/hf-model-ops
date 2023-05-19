@@ -12,6 +12,8 @@ async def test():
         # get reference to the local project
         src = client.host().directory("./tests", exclude=["venv/", ".pytest_cache/", ".git/"])
 
+        python_cache = client.cache_volume("python")
+
         async def test_version(version: str):
             python = (
                 client.container().from_(f"python:{version}-slim-buster")
@@ -19,6 +21,10 @@ async def test():
                 .with_directory("/src", src)
                 # set current working directory for next commands
                 .with_workdir("/src")
+                # cache for transformers and pip
+                .with_mounted_cache("/cache", python_cache)
+                .with_env_variable("TRANSFORMERS_CACHE", "/cache/hub")
+                .with_env_variable("XDG_CACHE_HOME", "/cache")
                 # install test dependencies
                 .with_exec(["pip", "install", "-r", "requirements.txt"])
                 # run tests
