@@ -32,7 +32,9 @@ def deploy(hf_token: str, hf_space_id: str):
 
 
 if __name__ == "__main__":
-    if "HF_TOKEN" not in os.environ:
+    access_token = os.environ.get("HF_TOKEN")
+
+    if access_token is None:
         print("missing HF_TOKEN in environment")
         sys.exit(1)
 
@@ -41,4 +43,4 @@ if __name__ == "__main__":
     # Run the tests
     test()
     # Deploy the app to HF
-    deploy(os.environ.get("HF_TOKEN"), "samalba/demo")
+    deploy(access_token, "samalba/demo")

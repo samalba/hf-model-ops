@@ -1,0 +1,21 @@
+name: dagger
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - uses: actions/checkout@v3
+      - name: Install deps
+        run: pip install -r ci/requirements.txt
+      - name: Run Dagger pipeline
+        run: python ci/deploy_space.py
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          _EXPERIMENTAL_DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
