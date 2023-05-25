@@ -18,11 +18,10 @@ def deploy(client: dagger.Client, hf_token: str, hf_space_id: str):
     secret_token = client.set_secret("hfAccessToken", hf_token)
     deployer = (client.container().from_("samalba/huggingface-space-deploy")
         .with_directory("/src", src)
-        .with_secret_variable("HF_TOKEN", secret_token)
+        .with_secret_variable("ACCESS_TOKEN", secret_token)
         .with_env_variable("CACHE_BUSTER", str(time.time()))
         .with_exec([
             "--repo-id", hf_space_id,
-            "--access-token", hf_token,
             "--timeout", "600",
             "/src"
         ])
