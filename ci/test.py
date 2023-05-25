@@ -10,7 +10,7 @@ def test(client: dagger.Client):
 
     # get reference to the local project
     src = client.host().directory("./tests", exclude=["venv/", ".pytest_cache/", ".git/"])
-
+    # cache python dependencies into a shared volume
     python_cache = client.cache_volume("python")
 
     def test_version(version: str):
@@ -32,10 +32,8 @@ def test(client: dagger.Client):
         )
 
         print(f"Starting tests for Python {version}")
-
         # execute
         python.exit_code()
-
         print(f"Tests for Python {version} succeeded!")
 
     for version in versions:

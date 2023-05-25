@@ -16,10 +16,12 @@ def deploy(client: dagger.Client, hf_token: str, hf_space_id: str):
     src = client.host().directory("./src", exclude=["venv/", ".pytest_cache/"])
 
     secret_token = client.set_secret("hfAccessToken", hf_token)
-    deployer = (client.container().from_("ghcr.io/samalba/huggingface-space-deploy:latest")
+    deployer = (
+        client.container().from_("ghcr.io/samalba/huggingface-space-deploy:latest")
         .with_directory("/src", src)
         .with_secret_variable("ACCESS_TOKEN", secret_token)
-        .with_env_variable("CACHE_BUSTER", str(time.time()))
+        # uncomment to bypass the cache (deploy every time)
+        # .with_env_variable("CACHE_BUSTER", str(time.time()))
         .with_exec([
             "--repo-id", hf_space_id,
             "--timeout", "600",
