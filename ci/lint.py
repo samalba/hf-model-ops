@@ -7,6 +7,8 @@ version = "3.11"
 
 def lint():
     with dagger.Connection(dagger.Config(log_output=sys.stderr)) as client:
+        client = client.pipeline("lint")
+
         # get reference to the local project
         src = client.host().directory("./src", exclude=["venv/", ".pytest_cache/", ".git/"])
 

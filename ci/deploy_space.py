@@ -11,6 +11,8 @@ from test import test
 
 def deploy(hf_token: str, hf_space_id: str):
     with dagger.Connection(dagger.Config(log_output=sys.stderr)) as client:
+        client = client.pipeline("deploy")
+
         # get reference to the local project
         src = client.host().directory("./src", exclude=["venv/", ".pytest_cache/"])
 

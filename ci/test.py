@@ -8,6 +8,8 @@ def test():
     versions = ["3.10", "3.11"]
 
     with dagger.Connection(dagger.Config(log_output=sys.stderr)) as client:
+        client = client.pipeline("test")
+
         # get reference to the local project
         src = client.host().directory("./tests", exclude=["venv/", ".pytest_cache/", ".git/"])
 
@@ -15,7 +17,8 @@ def test():
 
         def test_version(version: str):
             python = (
-                client.container().from_(f"python:{version}-slim-buster")
+                client.pipeline(f"python-{version}")
+                .container().from_(f"python:{version}-slim-buster")
                 # mount cloned repository into image
                 .with_directory("/src", src)
                 # set current working directory for next commands
