@@ -40,16 +40,63 @@ dagger run python ./ci/test.py
 
 ## Pipelines
 
-TODO (lint, test, deploy)
+The project implements three Dagger pipelines for Lint, Test and Deploy, illustrated with the following diagrams:
+
+```mermaid
+graph TD
+    subgraph "Lint"
+        srcLint(copy source code)
+        pullLint(fetch python container image)
+        pipLint[pip install flake8]
+        runLint[run flake8]
+
+        srcLint --> pipLint
+        pullLint --> pipLint
+        pipLint --> runLint
+    end
+
+    subgraph "Test Python 3.10, 3.11"
+        srcTest(copy source code)
+        pullTest(fetch python container image)
+        pipTest[pip install requirements]
+        runTest[pytest]
+        modelTest[model integration tests]
+        assertRougeTest[assert rouge score]
+
+        srcTest --> pipTest
+        pullTest --> pipTest
+        pipTest --> runTest
+        runTest --> modelTest
+        runTest --> assertRougeTest
+    end
+
+    subgraph "Deploy"
+        srcDeploy(copy source code)
+        pullDeploy(fetch deployer container image)
+        runDeploy[deploy to HF Space]
+
+        srcDeploy --> runDeploy
+        pullDeploy --> runDeploy
+        runLint --> runDeploy
+        modelTest --> runDeploy
+        assertRougeTest --> runDeploy
+    end
+```
 
 ## Why Dagger
 
-- cache (model weights and python deps)
-- running locally
-- github action integration
-- DAG: only run what's needed and in parallel whenever possible
+Applications backed by LLMs are challenging to make production ready, LLMs add constraints to build automations pipelines for building, testing and deploying applications.
 
-## Future
+Dagger provides several key features to build scalable, reproducible and portable CICD pipelines. This part outlines the benefits of Dagger in a context of an LLM-backed application.
 
-- Fine-tune model
-- Swap a model with another
+- [Caching](https://docs.dagger.io/635927/quickstart-caching/#use-caching): Using a pre-trained models involves fetching its Parameters (1.1GB of data with the model used here), Dagger can cache the parameters so they are fetched only once from the Hugging Face Hub.
+- Dagger pipelines can run locally so you don't need to rely on a CI infrastructure to develop your pipelines.
+- Dagger integrates easily with Github or Gitlab.
+- Dagger pipelines are computed using a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph) - so it will run only what is needed, and parallel whenever possible.
+
+## Future iterations
+
+Those are ideas that will likely be implemented in future iterations. This is open to feedback in case you want to see anything else.
+
+- Fine-tune an existing model from Hugging Face using a new dataset and swap out the current model with the new one
+- GPU access
