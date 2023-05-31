@@ -17,7 +17,7 @@ def deploy(client: dagger.Client, hf_token: str, hf_space_id: str):
 
     secret_token = client.set_secret("hfAccessToken", hf_token)
     deployer = (
-        client.container().from_("ghcr.io/samalba/huggingface-space-deploy:latest")
+        client.container().from_("ghcr.io/samalba/huggingface-space-deploy:latest@sha256:38c0e113ec371ded13939ab50000f9414aefcb6c7309387fc9abb374f2c803a6")
         .with_directory("/src", src)
         .with_secret_variable("ACCESS_TOKEN", secret_token)
         # uncomment to bypass the cache (deploy every time)
