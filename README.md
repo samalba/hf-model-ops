@@ -6,6 +6,12 @@ This project shows how to automate a full ML Application with build, test and de
 
 All pipelines are written in Python, using the [Dagger Python SDK](https://docs.dagger.io/sdk/python).
 
+## Live demo
+
+Here is demo recording from [the Dagger community call](https://dagger.io/events).
+
+[![Community Call Demo: MLOps with Hugging Face Spaces and Dagger](https://img.youtube.com/vi/CoHjpBQLp98/0.jpg)](https://www.youtube.com/watch?v=CoHjpBQLp98)
+
 ## Dependencies
 
 The project uses the following technologies:
