@@ -22,6 +22,8 @@ The project uses the following technologies:
 
 ## How to run the pipelines
 
+First, make sure you have the [the dagger CLI](https://docs.dagger.io/cli/465058/install) installed.
+
 The pipeline `deploy_space.py` will run the `linter` and the `test` pipelines before deploying the code.
 
 ```sh
